@@ -196,6 +196,57 @@
 %%   newtxmath and so clash if used.
 %\usepackage[options]{amsmath}
 %\usepackage{amsthm}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{listings}
+
+% Define custom colours
+\definecolor{vscBackground}{rgb}{0.12, 0.12, 0.12} % Softer dark background
+\definecolor{vscText}{rgb}{0.96, 0.96, 0.96}       % Light grey text
+\definecolor{vscKeywordBlue}{rgb}{0.34, 0.61, 0.84}% Blue for definitions (RGB: 86,156,214)
+\definecolor{vscControlPink}{rgb}{0.77, 0.52, 0.75}% Pink for control flow (RGB: 197,134,192)
+\definecolor{vscOptionGreen}{rgb}{0.3059, 0.7882, 0.6902}
+\definecolor{vscCommentGray}{rgb}{0.5, 0.5, 0.5}   % Comments in grey
+\definecolor{vscNumberGray}{rgb}{0.8, 0.8, 0.8}    % Line numbers in light grey
+\definecolor{vscStringOrange}{rgb}{0.95, 0.65, 0.2}% Strings in orange (optional)
+
+% Listings style configuration
+\lstdefinelanguage{Coq}{
+  morekeywords=[1]{Module, Definition, Some, None, End}, % Group 1: Blue
+  morekeywords=[2]{match, with, if, then, else, end},    % Group 2: Pink
+  morekeywords=[3]{option, Type}, % Group 3: Green
+  sensitive=true,
+  morecomment=[l]{(*}, 
+  morecomment=[s]{(*}{*)},
+  morestring=[b]", % Strings
+}
+
+\lstset{
+  language=Coq,
+  basicstyle=\ttfamily\footnotesize\color{vscText},  % Default text style
+  keywordstyle=[1]\color{vscKeywordBlue},   % Group 1: Blue keywords
+  keywordstyle=[2]\color{vscControlPink},   % Group 2: Pink keywords
+  keywordstyle=[3]\color{vscOptionGreen},
+  commentstyle=\itshape\color{vscCommentGray},       % Comments in italic grey
+  stringstyle=\color{vscStringOrange},               % Strings in orange
+  backgroundcolor=\color{vscBackground},             % Dark background
+  frame=none,                                        % Remove visible border
+  framerule=0pt,                                     % No rule thickness
+  rulecolor=\color{vscBackground},                   % Match frame color to background
+  breaklines=true,                                   % Break long lines
+  tabsize=2,
+  showspaces=false,
+  showstringspaces=false,
+  aboveskip=10pt,
+  belowskip=10pt,
+  escapeinside={(*@}{@*)},
+}
+
+\renewcommand{\lstlistingname}{Figure}
 
 %% DO NOT MOVE OR REMOVE \setupthesisfonts
 \setupthesisfonts
@@ -576,26 +627,185 @@ Sui's object-centric model also facilitates \emph{parallel transaction execution
 \subsection{The Move Programming Language}
 The programmability of Sui is powered by the \texttt{Move} programming language, originally developed by Meta for the Libra blockchain. Move was designed with a strong emphasis on \emph{safety}, \emph{resource management}, and \emph{modularity}, making it an ideal choice for blockchain development.
 
-Move's design is heavily influenced by the Rust programming language, renowned for its performance and memory safety. This foundation enables Move to inherit key attributes critical for blockchain applications. Specifically, Move's \emph{resource-oriented programming paradigm} is inspired by Rust's \emph{ownership model}, ensuring that digital assets are managed securely and efficiently. Moreover, Rust's emphasis on low-level performance contributes to Move's ability to execute smart contracts at scale, complementing Sui's object-centric architecture.
+Move's design is heavily influenced by the Rust programming language, renowned for its performance and memory safety. This foundation enables Move to inherit key attributes critical for blockchain applications. Specifically, Move's \emph{resource-oriented programming paradigm} is inspired by Rust's \emph{ownership model}~\cite{rust_ownership}, ensuring that digital assets are managed securely and efficiently. Moreover, Rust's emphasis on low-level performance contributes to Move's ability to execute smart contracts at scale, complementing Sui's object-centric architecture.
 
 One of Move's key innovations is its treatment of \emph{resources as first-class citizens}, ensuring that digital assets cannot be duplicated or discarded inadvertently. In programming, treating something as a \emph{first-class citizen} means it has full capabilities to be created, passed to functions, returned from functions, and assigned to variables—just like standard data types such as integers or strings. This ensures that digital assets in Move are handled with strict safeguards, preventing common vulnerabilities such as double-spending or resource loss. Furthermore, Move's \emph{expressive type system} allows developers to encode and verify key properties at compile time, reducing runtime errors and vulnerabilities.
+
+\subsection{Key Innovations in Sui}
+Sui introduces several novel features that distinguish it from other Layer 1 blockchains:
+\begin{itemize}
+    \item \textbf{Object-Centric Data Model}: Simplifies transaction processing by representing on-chain entities as independent objects, enabling parallelism and scalability.
+    \item \textbf{Parallel Transaction Execution}: Processes transactions concurrently to achieve higher throughput compared to sequential execution models.
+    \item \textbf{Gas Pricing Mechanisms}: Employs dynamic gas pricing to balance user costs and validator incentives, creating a sustainable economic model.~\cite{sui_fees}
+\end{itemize}
+
+These innovations position Sui as a leader among next-generation blockchains, offering solutions to the longstanding challenges of scalability and efficiency.
+
+\subsection{The Case for Formal Verification}
+While Sui's innovations address many challenges in blockchain design, ensuring the security and correctness of the system remains paramount. Blockchain protocols and smart contracts are prone to errors and exploits, as evidenced by numerous high-profile security breaches in the decentralised finance (DeFi) sector.~\cite{phalcon_explorer}~\cite{rekt}
+
+Formal verification provides a rigorous mathematical framework for proving the correctness of code. In the case of Sui, our work focused on verifying the \emph{type checker}, an essential component of the \texttt{Move} language, which ensures that programs adhere to their specified types and constraints. By leveraging tools such as \texttt{Coq}, the verification of the type checker guarantees critical properties, such as type safety and adherence to resource rules, under all conditions. Translating Rust code into formal specifications enables the creation of proofs that validate these properties, nullifying the risk of vulnerabilities.
+
+This section establishes the groundwork for understanding Sui's architectural innovations and highlights the importance of formal verification in ensuring robust and secure blockchain protocols.
+
+\begin{tcolorbox}[
+  colback=white,     % Background color inside the box (set to white to match the document)
+  colframe=white,    % Frame color (set to white to remove it)
+  boxrule=0pt,       % No border
+  sharp corners,     % Remove rounded corners
+  boxsep=0pt,        % Remove padding
+  left=0pt,          % Remove left margin
+  right=0pt,         % Remove right margin
+  top=0pt,           % Remove top margin
+  bottom=0pt         % Remove bottom margin
+]
+\begin{lstlisting}[caption={Definition of the Inductive Type \texttt{t}},captionpos=b]
+Module IntegerValue.
+  Inductive (*@\textcolor{vscOptionGreen}{t}@*) : Type :=
+    | U8 : Z -> t
+    | U16 : Z -> t
+    | U32 : Z -> t
+    | U64 : Z -> t
+    | U128 : Z -> t
+    | U256 : Z -> t
+    .
+End IntegerValue.
+\end{lstlisting}
+\end{tcolorbox}
+
+\textbf{Explanation}: The \texttt{Inductive t} defines a type \texttt{t} that supports multiple integer bit widths, such as \texttt{U8}, \texttt{U16}, \texttt{U32}, etc. Each constructor associates a bit length with a value of type \texttt{Z} (unbounded integers). This structure ensures that integers of varying sizes can be represented in the same type.
+
+\begin{tcolorbox}[
+  colback=white,     % Background color inside the box (set to white to match the document)
+  colframe=white,    % Frame color (set to white to remove it)
+  boxrule=0pt,       % No border
+  sharp corners,     % Remove rounded corners
+  boxsep=0pt,        % Remove padding
+  left=0pt,          % Remove left margin
+  right=0pt,         % Remove right margin
+  top=0pt,           % Remove top margin
+  bottom=0pt         % Remove bottom margin
+]
+\begin{lstlisting}[caption={Checked Addition \texttt{checked\_add}},captionpos=b]
+Definition checked_add (a : ValueImpl.t) (b : ValueImpl.t) : option ValueImpl.t :=
+  match a, b with
+  | ValueImpl.U8 l, ValueImpl.U8 r =>
+      if l + r <=? 2^8 - 1
+      then Some (ValueImpl.U8 (l + r))
+      else None
+  | ValueImpl.U16 l, ValueImpl.U16 r =>
+      if l + r <=? 2^16 - 1
+      then Some (ValueImpl.U16 (l + r))
+      else None
+  | ValueImpl.U32 l, ValueImpl.U32 r =>
+      if l + r <=? 2^32 - 1
+      then Some (ValueImpl.U32 (l + r))
+      else None
+  | ValueImpl.U64 l, ValueImpl.U64 r =>
+      if l + r <=? 2^64 - 1
+      then Some (ValueImpl.U64 (l + r))
+      else None
+  | ValueImpl.U128 l, ValueImpl.U128 r =>
+      if l + r <=? 2^128 - 1
+      then Some (ValueImpl.U128 (l + r))
+      else None
+  | ValueImpl.U256 l, ValueImpl.U256 r =>
+      if l + r <=? 2^256 - 1
+      then Some (ValueImpl.U256 (l + r))
+      else None
+  | _, _ => None
+  end.
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\textbf{Explanation}: The \texttt{checked\_add} function adds two integers of the same type (e.g., \texttt{U8}, \texttt{U16}). If the result exceeds the maximum value for that type, it returns \texttt{None}, preventing overflow. Otherwise, it wraps the result in a \texttt{Some} constructor.
+
+\begin{tcolorbox}[
+  colback=white,     % Background color inside the box (set to white to match the document)
+  colframe=white,    % Frame color (set to white to remove it)
+  boxrule=0pt,       % No border
+  sharp corners,     % Remove rounded corners
+  boxsep=0pt,        % Remove padding
+  left=0pt,          % Remove left margin
+  right=0pt,         % Remove right margin
+  top=0pt,           % Remove top margin
+  bottom=0pt         % Remove bottom margin
+]
+\begin{lstlisting}[caption={Checked Left Shift \texttt{shl\_checked}},captionpos=b]
+Definition shl_checked (self : IntegerValue.t) (other : IntegerValue.t) : PartialVMResult.t IntegerValue.t :=
+  match self, other with
+  | IntegerValue.U8 l, IntegerValue.U8 r =>
+      if r <? 8
+      then Result.Ok (IntegerValue.U8 (Z.shiftl l r))
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | IntegerValue.U16 l, IntegerValue.U16 r =>
+      if r <? 16
+      then Result.Ok (IntegerValue.U16 (Z.shiftl l r))
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | IntegerValue.U32 l, IntegerValue.U32 r =>
+      if r <? 32
+      then Result.Ok (IntegerValue.U32 (Z.shiftl l r))
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | IntegerValue.U64 l, IntegerValue.U64 r =>
+      if r <? 64
+      then Result.Ok (IntegerValue.U64 (Z.shiftl l r))
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | IntegerValue.U128 l, IntegerValue.U128 r =>
+      if r <? 128
+      then Result.Ok (IntegerValue.U128 (Z.shiftl l r))
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | IntegerValue.U256 l, IntegerValue.U256 r =>
+      if r <? 256
+      then Result.Ok (IntegerValue.U256 (Z.shiftl l r))
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | _, _ => Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  end.
+\end{lstlisting}
+\end{tcolorbox}
+
+\textbf{Explanation}: The \texttt{shl\_checked} function shifts the integer left by a specified number of bits. It ensures that the shift amount does not exceed the bit width of the type (e.g., \texttt{8} for \texttt{U8}). If the shift amount is too large, it raises an arithmetic error.
+
+\begin{tcolorbox}[
+  colback=white,     % Background color inside the box (set to white to match the document)
+  colframe=white,    % Frame color (set to white to remove it)
+  boxrule=0pt,       % No border
+  sharp corners,     % Remove rounded corners
+  boxsep=0pt,        % Remove padding
+  left=0pt,          % Remove left margin
+  right=0pt,         % Remove right margin
+  top=0pt,           % Remove top margin
+  bottom=0pt         % Remove bottom margin
+]
+\begin{lstlisting}[caption={Casting to \texttt{u64} with \texttt{cast\_u64}},captionpos=b]
+Definition cast_u64 (self : IntegerValue.t) : PartialVMResult.t Z :=
+  match self with
+  | IntegerValue.U8 l => Result.Ok l
+  | IntegerValue.U16 l => Result.Ok l
+  | IntegerValue.U32 l => Result.Ok l
+  | IntegerValue.U64 l => Result.Ok l
+  | IntegerValue.U128 l =>
+        if l <=? 2^64 - 1
+      then Result.Ok l
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  | IntegerValue.U256 l =>
+      if l <=? 2^64 - 1
+      then Result.Ok l
+      else Result.Err (PartialVMError.new StatusCode.ARITHMETIC_ERROR)
+  end.
+\end{lstlisting}
+\end{tcolorbox}
+
+
+
+
+\textbf{Explanation}: The \texttt{cast\_u64} function safely casts values of various integer types to \texttt{U64}. If a \texttt{U256} value exceeds the range of \texttt{U64}, it raises an arithmetic error. Otherwise, it returns the value in a \texttt{Result.Ok}.
 
 %% In a thesis, every section/chapter starts a new page, hence the \clearpage
 \clearpage
 %% Bibliography/ list of references
 %%
 
-\thesisbibliography
+\bibliographystyle{unsrt} % Or any other style you prefer (e.g., IEEE, ACM)
+\bibliography{references/reference} % Refers to the `references.bib` file
 
-\begin{thebibliography}{99}
-
-
-  \bibitem{werth2023review}
-  Werth, Jan, et al. "A Review of Blockchain Platforms Based on the Scalability, Security and Decentralization Trilemma." ICEIS (1) (2023): 146-155.
-
-  \bibitem{suiobjects}
-  Mysten Labs, \textit{All About Objects}. Online article. Available at
-  \url{https://blog.sui.io/all-about-objects/} (published on May 23, 2023, accessed on 8 January 2025).  
-
-\end{thebibliography}
 \end{document}
