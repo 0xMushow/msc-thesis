@@ -184,7 +184,7 @@
   \iftoggle{UTF}{\hypersetup{pdfencoding=unicode}}{}%
   \hypersetup{pdfpagemode=UseNone, bookmarksnumbered=true}%
   \iftoggle{ONLINE}{%
-  	\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue, citecolor=blue}%
+  	\hypersetup{colorlinks=black, urlcolor=black, linkcolor=black, citecolor=black}%
   }{%
   \iftoggle{PRINT}{%
 %  	\hypersetup{colorlinks=false, urlcolor=black, linkcolor=black, citecolor=black}%
